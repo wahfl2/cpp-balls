@@ -1,74 +1,38 @@
+#include <balls.h>
 #include <iostream>
-#include <SDL.h>
+#include <SFML/Graphics.hpp>
 
-// You shouldn't really use this statement, but it's fine for small programs
-using namespace std;
+int main() {
+    sf::RenderWindow window {
+        { 1600u, 900u },
+        "balls"
+    };
 
-// You must include the command line parameters for your main function to be recognized by SDL
-int main(int argc, char** args) {
+    window.setFramerateLimit(60);
 
-    // Pointers to our window and surface
-    SDL_Surface* winSurface = NULL;
-    SDL_Window* window = NULL;
+    auto balls = Balls();
 
-    // Initialize SDL. SDL_Init will return -1 if it fails.
-    if ( SDL_Init( SDL_INIT_EVERYTHING ) < 0 ) {
-        cout << "Error initializing SDL: " << SDL_GetError() << endl;
-        system("pause");
-        // End the program
-        return 1;
-    }
-
-    // Create our window
-    window = SDL_CreateWindow(
-        "Example",
-        SDL_WINDOWPOS_UNDEFINED,
-        SDL_WINDOWPOS_UNDEFINED,
-        680, 480,
-        SDL_WINDOW_SHOWN
-    );
-
-    // Make sure creating the window succeeded
-    if ( !window ) {
-        cout << "Error creating window: " << SDL_GetError()  << endl;
-        system("pause");
-        // End the program
-        return 1;
-    }
-
-    // Get the surface from the window
-    winSurface = SDL_GetWindowSurface( window );
-
-    // Make sure getting the surface succeeded
-    if ( !winSurface ) {
-        cout << "Error getting surface: " << SDL_GetError() << endl;
-        system("pause");
-        // End the program
-        return 1;
-    }
-
-    // Fill the window with a white rectangle
-    SDL_FillRect( winSurface, NULL, SDL_MapRGB( winSurface->format, 255, 255, 255));
-
-    // Update the window display
-    SDL_UpdateWindowSurface( window );
-
-    bool close = false;
-    while (!close) {
-        SDL_Event event;
-        while (SDL_PollEvent(&event)) {
+    while (window.isOpen()) {
+        for (auto event = sf::Event{}; window.pollEvent(event);) {
             switch (event.type) {
-                case SDL_QUIT:
-                    close = true;
-                break;
+                case sf::Event::Closed: {
+                    window.close();
+                }
+
+                default:;
             }
         }
 
-        // calculates to 60 fps
-        SDL_Delay(1000 / 60);
-    }
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+            sf::Vector2i position = sf::Mouse::getPosition(window);
+            balls.spawn_ball(position.x, position.y);
+        }
 
-    SDL_DestroyWindow( window );
-    SDL_Quit();
-    return 0;
+        window.clear();
+
+        balls.update(window);
+        balls.render(window);
+
+        window.display();
+    }
 }
