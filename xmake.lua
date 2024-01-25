@@ -1,14 +1,14 @@
 add_rules("mode.debug", "mode.release")
 add_ldflags("-subsystem:console", {force = true})
 
-add_requires("sfml", "effolkronium-random")
+add_requires("sfml", "effolkronium-random", "glm")
 
 add_includedirs("src")
 
 target("untitled2")
     set_kind("binary")
     add_files("src/*.cpp")
-    add_packages("sfml", "effolkronium-random")
+    add_packages("sfml", "effolkronium-random", "glm")
 
 --
 -- If you want to known more usage about xmake, please see https://xmake.io

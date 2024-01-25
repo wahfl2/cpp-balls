@@ -1,6 +1,7 @@
 #include <cstdint>
 #include <util.h>
 #include <effolkronium/random.hpp>
+#include <glm/vec2.hpp>
 
 using Random = effolkronium::random_static;
 
@@ -13,27 +14,16 @@ sf::Color random_color() {
     return {r, g, b};
 }
 
-sf::Vector2f center_of_screen(const sf::RenderWindow &window) {
+glm::vec2 center_of_screen(const sf::RenderWindow &window) {
     const sf::Vector2u size = window.getSize();
     const auto size_f = static_cast<sf::Vector2f>(size);
     return { size_f.x / 2.0f, size_f.y / 2.0f };
 }
 
-float distance_squared(const sf::Vector2f a, const sf::Vector2f b) {
-    const auto dx = a.x - b.x;
-    const auto dy = a.y - b.y;
-
-    return dx*dx + dy*dy;
+sf::Vector2f glm2sf(glm::vec2 v) {
+    return {v.x, v.y};
 }
 
-float distance(const sf::Vector2f a, const sf::Vector2f b) {
-    return sqrt(distance_squared(a, b));
-}
-
-float vec_len(const sf::Vector2f a) {
-    return sqrt(a.x * a.x + a.y * a.y);
-}
-
-sf::Vector2f vec_normalize(sf::Vector2f a) {
-    return a / vec_len(a);
+glm::vec2 sf2glm(sf::Vector2f v) {
+    return {v.x, v.y};
 }

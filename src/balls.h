@@ -1,16 +1,16 @@
 #pragma once
 #include <vector>
+#include <glm/vec2.hpp>
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
-#include <SFML/System/Vector2.hpp>
 
 struct Balls {
     private:
-        std::vector<sf::Vector2f> positions, velocities;
+        std::vector<glm::vec2> positions, velocities;
         std::vector<sf::Color> colors;
         std::vector<float> radii;
-        sf::Vector2f gravity{sf::Vector2f(0.0, 0.2)};
-        uint32_t iterations{6};
+        glm::vec2 gravity{ glm::vec2(0.0, 0.2) };
+        uint32_t iterations{ 6 }, substeps{ 1 };
 
     public:
         Balls();
@@ -19,8 +19,9 @@ struct Balls {
         void update(const sf::RenderWindow& window);
 
     private:
-        void apply_vel();
-        void collide_boundary(sf::Vector2f center);
+        void apply_gravity();
+        void apply_vel(uint32_t substeps);
+        void collide_boundary(glm::vec2 center);
         void collide_pair(uint32_t i, uint32_t j);
         void collide_balls();
 };
